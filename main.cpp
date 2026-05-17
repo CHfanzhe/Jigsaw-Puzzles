@@ -1,4 +1,4 @@
-#include "Jigsaw_Puzzles_template.hpp"
+#include "JigsawPuzzles/JigsawPuzzles.hpp"
 #include <iostream>
 
 namespace Tags{
@@ -6,7 +6,7 @@ namespace Tags{
     struct LifeReporter{};
 }
 
-struct LifeReporter : public Jigsaw_Puzzles::Template::Jigsaw_Puzzle<Tags::LifeReporter>
+struct LifeReporter : public JigsawPuzzles::Template::JigsawPuzzle<Tags::LifeReporter>
 {
     LifeReporter() {
         std :: cout << "LifeReporter Was Build!\n";
@@ -16,7 +16,7 @@ struct LifeReporter : public Jigsaw_Puzzles::Template::Jigsaw_Puzzle<Tags::LifeR
     }
 };
 
-struct Print : public Jigsaw_Puzzles::Template::Jigsaw_Puzzle<Tags::PRINT> {
+struct Print : public JigsawPuzzles::Template::JigsawPuzzle<Tags::PRINT> {
     inline void PrintFunc(const std::string& msg) noexcept {
         std :: cout << msg;
     }
@@ -32,7 +32,7 @@ struct PrintV2 : Print {
 };
 
 int main(){
-    Jigsaw_Puzzles::Template::Jigsaw_Puzzle_Board<LifeReporter, PrintV2> test;
+    JigsawPuzzles::Template::JigsawPuzzle_Board<LifeReporter, PrintV2> test;
     PrintV2& a = test.Load<Tags::PRINT>();
     a.PrintFunc("Hello, World!!!!!\n");
     a.PrintFuncln("1234567890");
