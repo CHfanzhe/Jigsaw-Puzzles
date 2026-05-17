@@ -53,6 +53,16 @@ namespace JigsawPuzzles::Template {
     struct get_herit<T, std::enable_if_t<is_JigsawPuzzle_v<T>>> { using type = typename T::InheritArg; };
     template<typename T> using get_herit_t = typename get_herit<T>::type;
 
+    template<typename T1, typename T2, typename =  //-> Same NameTag
+        std::enable_if_t<is_JigsawPuzzle_v<T1> && is_JigsawPuzzle_v<T2>>>
+    struct is_same_JigsawPuzzles : public
+        std::conditional_t<std::is_same_v<get_nametag_t<T1>, get_nametag_t<T2>>,
+            std::true_type, std::false_type> 
+    {};
+    template<typename T1, typename T2> 
+    constexpr bool is_same_JigsawPuzzles_t = is_same_JigsawPuzzles<T1, T2>::value;
+
+
 //--->  JigsawPuzzleBoard
 
     template<typename... JigsawPuzzles>
@@ -67,9 +77,9 @@ namespace JigsawPuzzles::Template {
             struct Search<Tag, T, Args...> {
             private:
                 using other_result = typename Search<Tag, Args...>::type;
-                using this_result = std::conditional_t<is_JigsawPuzzle_v<T>,
-                std::conditional_t<std::is_same_v<get_nametag_t<T>, Tag>, std::tuple<T>, std::tuple<>>, 
-                std::tuple<>>;
+                using this_result = 
+                    std::conditional_t<is_same_JigsawPuzzles_t<JigsawPuzzle<Tag>, T>,
+                        std::tuple<T>, std::tuple<>>;
             public:
                 using type =
                 decltype(std::tuple_cat(std::declval<this_result>(), std::declval<other_result>()));
@@ -82,7 +92,6 @@ namespace JigsawPuzzles::Template {
         static_assert((is_JigsawPuzzle_v<JigsawPuzzles> && ...),
             "All The Args Must Be Base On JigsawPuzzles!");
     public:
-    
         template<typename NameTag, typename result = typename Tuple::Search<NameTag, JigsawPuzzles...>::type>
         constexpr auto Load() noexcept 
             -> typename std::decay_t<std::tuple_element_t<0, result>> & {
