@@ -43,14 +43,16 @@ struct PrintV3 : PrintV2 {
     }
 };
 
-int main(){
-    JigsawPuzzles::Template::JigsawPuzzleBoard<LifeReporter, PrintV3> test;
-    PrintV3& a = test.Load<Tags::PRINT>();
-    a.PrintFunc("Hello, World!!!!!\n");
-    a.PrintFuncln("1234567890");
-    a.PrintFuncHello();
+template<typename Board>
+void PrintMSG(Board& target) noexcept {
+    Print& a = target.template Load<Tags::PRINT>();
+    a.PrintFunc("Hello, world!\n");
+}
 
-    std :: cout << "Hello, World!" << std :: endl;
+int main(){
+    JigsawPuzzles::Template::JigsawPuzzleBoard<LifeReporter, PrintV2> test;
+    PrintMSG(test);
+
     std :: cin.get();
     return 0;
 }

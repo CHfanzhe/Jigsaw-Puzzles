@@ -68,6 +68,9 @@ namespace JigsawPuzzles::Template {
     template<typename... JigsawPuzzles>
     class JigsawPuzzleBoard : protected JigsawPuzzles... {
     private:
+        friend struct JigsawPuzzleBoardTools;
+        using Args = std::tuple<JigsawPuzzles...>;
+
         struct Tuple { // Create For Tuple Handle
         public:
             template<typename Tag, typename... Args>
